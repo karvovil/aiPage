@@ -1096,3 +1096,5 @@
 /home/ai2024lectures/MyWebProject/obj/Debug/net8.0/MyWebProject.genruntimeconfig.cache
 /home/ai2024lectures/MyWebProject/obj/Debug/net8.0/ref/MyWebProject.dll
 /home/ai2024lectures/AIExamples/MyWebProject/bin/Debug/net8.0/Newtonsoft.Json.dll
+/home/ai2024lectures/AIExamples/MyWebProject/bin/Debug/net8.0/DotNetEnv.dll
+/home/ai2024lectures/AIExamples/MyWebProject/bin/Debug/net8.0/Sprache.dll

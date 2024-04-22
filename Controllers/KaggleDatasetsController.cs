@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using DotNetEnv;
 
 namespace YourNamespace.Controllers
 {
@@ -23,13 +24,12 @@ namespace YourNamespace.Controllers
         {
             try
             {
+                Env.Load();
+                var apiKey = Env.GetString("KAGGLE_API_KEY");
                 var request = new HttpRequestMessage(HttpMethod.Get,
                     $"https://www.kaggle.com/api/datasets/list?search={search}");
 
-                request.Headers.Add("Authorization",
-                "Bearer bd20ffda00471552397df6e57c89fefd"
-                ); // Replace [Your Kaggle API Token] with your actual Kaggle API token
-
+                request.Headers.Add("Authorization", $"Bearer {apiKey}");
                 var client = _clientFactory.CreateClient();
 
                 var response = await client.SendAsync(request);
