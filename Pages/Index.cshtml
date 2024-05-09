@@ -28,9 +28,9 @@
                         $('#searchResults').empty();
                         data.forEach(dataset => {
                             var words = dataset.split(' ');
-                            var link = words[0];
+                            var link = words[0].replace('/', '.');
                             var displayText = words.slice(1).join(' ');
-                            $('#searchResults').append(`<p><a href="${link}" target="_blank">${displayText}</a></p>`);
+                            $('#searchResults').append(`<p><a href="/Dataset/${link}">${displayText}</a></p>`);
                         });
                     }
                 });
