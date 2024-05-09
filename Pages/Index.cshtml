@@ -18,21 +18,24 @@
     <div id="searchResults"></div>
 
     <script>
-$(document).ready(function() {
-    $('#searchButton').on('click', function() {
-        var query = $('#searchBar').val();
-        $.ajax({
-            url: '/api/KaggleDatasets?search=' + query,
-            type: 'GET',
-            success: function(data) {
-                $('#searchResults').empty();
-                data.forEach(dataset => {
-                    $('#searchResults').append(`<p>${dataset}</p>`);
+        $(document).ready(function() {
+            $('#searchButton').on('click', function() {
+                var query = $('#searchBar').val();
+                $.ajax({
+                    url: '/api/KaggleDatasets?search=' + query,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#searchResults').empty();
+                        data.forEach(dataset => {
+                            var words = dataset.split(' ');
+                            var link = words[0];
+                            var displayText = words.slice(1).join(' ');
+                            $('#searchResults').append(`<p><a href="${link}" target="_blank">${displayText}</a></p>`);
+                        });
+                    }
                 });
-            }
+            });
         });
-    });
-});
     </script>
 </body>
 </html>

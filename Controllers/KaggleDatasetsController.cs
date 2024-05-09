@@ -5,6 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using DotNetEnv;
+using System.Web; // Add this line to import the HttpUtility class
+using Microsoft.Extensions.Logging; // Add this line to import the ILogger class
+using HtmlAgilityPack;
+using System.IO; // Add this line to import the System.IO namespace
+using System.Diagnostics; // Add this line to import the System.Diagnostics namespace
+using System.Collections.Generic; // Add this line to import the System.Collections.Generic namespace
 
 namespace YourNamespace.Controllers
 {
@@ -13,10 +19,12 @@ namespace YourNamespace.Controllers
     public class KaggleDatasetsController : ControllerBase
     {
         private readonly IHttpClientFactory _clientFactory;
+        private readonly ILogger<KaggleDatasetsController> _logger; // Add this line to import the ILogger class
 
-        public KaggleDatasetsController(IHttpClientFactory clientFactory)
+        public KaggleDatasetsController(IHttpClientFactory clientFactory, ILogger<KaggleDatasetsController> logger) // Add the ILogger<KaggleDatasetsController> logger parameter to the constructor
         {
             _clientFactory = clientFactory;
+            _logger = logger; // Assign the logger parameter to the _logger field
         }
 
         [HttpGet]
@@ -24,42 +32,38 @@ namespace YourNamespace.Controllers
         {
             try
             {
-                Env.Load();
-                var apiKey = Env.GetString("KAGGLE_API_KEY");
-                var request = new HttpRequestMessage(HttpMethod.Get,
-                    $"https://www.kaggle.com/api/datasets/list?search={search}");
+                string cmd = $"-c \"kaggle datasets list -s {search} | grep {search}\"";
 
-                request.Headers.Add("Authorization", $"Bearer {apiKey}");
-                var client = _clientFactory.CreateClient();
-
-                var response = await client.SendAsync(request);
-
-                if (response.IsSuccessStatusCode)
+                var process = new Process()
                 {
-                    var responseString = await response.Content.ReadAsStringAsync();
-                    ExpandoObject? data = JsonConvert.DeserializeObject<ExpandoObject>(responseString);
-                    if (data != null)
+                    StartInfo = new ProcessStartInfo
                     {
-                        IDictionary<string, object>? dictionary = data as IDictionary<string, object>;
-                        if (dictionary != null && dictionary.ContainsKey("datasets"))
-                        {
-                            return Ok(dictionary["datasets"]);
-                        }
+                        FileName = "/bin/bash",
+                        Arguments = cmd,
+                        RedirectStandardOutput = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
                     }
-                }
-                else
+                };
+
+                process.Start();
+
+                var datasets = new List<string>();
+                while (!process.StandardOutput.EndOfStream)
                 {
-                    return BadRequest("The response from the Kaggle API doesn't contain a 'datasets' property.");
+                    var line = process.StandardOutput.ReadLine();
+                    datasets.Add(line);
                 }
+
+                process.WaitForExit();
+
+                return Ok(datasets);
             }
             catch (Exception ex)
             {
-                // Log the exception message
-                Console.WriteLine(ex.Message);
-                // Return a 500 Internal Server Error response
-                return StatusCode(500, "An error occurred while processing your request. Please try again later.");
+                _logger.LogError(ex, "An error occurred while trying to search for datasets.");
+                return StatusCode(500, "An error occurred while trying to search for datasets." + ex);
             }
-            return BadRequest("An unexpected error occurred.");
         }
     }
 }

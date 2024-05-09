@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "c/L/cgD4nj9jBacnnemJM9SFXhDuhV7FotWuhbgu36ZIcFflGqJtA7U1NA7nWTDLMP+Qf0Hv0wnw1wTqi8z1vg==",
+  "dgSpecHash": "ELhQ7jNfFMfg2sr67X8hCndE86WjtzP7DnCOpNFZV1Iteib0h6LILzNYLmMJwEzQ4B7GKxMvkJphrVQ4uyoJ9w==",
   "success": true,
   "projectFilePath": "/home/ai2024lectures/AIExamples/MyWebProject/MyWebProject.csproj",
   "expectedPackageFiles": [
     "/home/ai2024lectures/.nuget/packages/dotnetenv/3.0.0/dotnetenv.3.0.0.nupkg.sha512",
+    "/home/ai2024lectures/.nuget/packages/htmlagilitypack/1.11.61/htmlagilitypack.1.11.61.nupkg.sha512",
     "/home/ai2024lectures/.nuget/packages/microsoft.aspnetcore.mvc.razor.extensions/6.0.0/microsoft.aspnetcore.mvc.razor.extensions.6.0.0.nupkg.sha512",
     "/home/ai2024lectures/.nuget/packages/microsoft.aspnetcore.mvc.razor.runtimecompilation/8.0.4/microsoft.aspnetcore.mvc.razor.runtimecompilation.8.0.4.nupkg.sha512",
     "/home/ai2024lectures/.nuget/packages/microsoft.aspnetcore.razor.language/6.0.0/microsoft.aspnetcore.razor.language.6.0.0.nupkg.sha512",
