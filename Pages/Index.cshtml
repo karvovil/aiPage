@@ -7,35 +7,99 @@
     <link rel="stylesheet" type="text/css" href="/css/site.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
-<body>
+<body><div id="main-content">
     <div class="stars"></div>
-    <h1>Welcome to My Website</h1>
-    <p>This is the landing page of my .NET project.</p>
+    <h1>Dataset search</h1>
+    <p>Welcome to our dataset search platform! Here, you can explore a vast collection of datasets by entering your search terms in the box below. Click 'Search' to discover datasets related to your query. Each result will lead you to a detailed view of the dataset. Start your data exploration journey now!</p>
 
     <input type="text" id="searchBar" placeholder="Search for datasets...">
     <button id="searchButton">Search</button>
-
+    <p id="searchInstructions">Enter your search query above to find datasets. Press 'Enter' to search.</p>
+    <div id="loadingIcon" class="loader"></div>
     <div id="searchResults"></div>
 
     <script>
         $(document).ready(function() {
-            $('#searchButton').on('click', function() {
-                var query = $('#searchBar').val();
-                $.ajax({
-                    url: '/api/KaggleDatasets?search=' + query,
-                    type: 'GET',
-                    success: function(data) {
-                        $('#searchResults').empty();
-                        data.forEach(dataset => {
-                            var words = dataset.split(' ');
-                            var link = words[0].replace('/', '.');
-                            var displayText = words.slice(1).join(' ');
-                            $('#searchResults').append(`<p><a href="/Dataset/${link}">${displayText}</a></p>`);
-                        });
-                    }
-                });
+            $('#searchButton').on('click', performSearch);
+            $('#searchBar').on('keypress', function(e) {
+                if (e.which == 13) { // 13 is the key code for Enter
+                    performSearch();
+                }
             });
         });
+
+        function performSearch() {
+            var query = $('#searchBar').val();
+            $('#loadingIcon').show();
+            $.ajax({
+                url: '/api/KaggleDatasets?search=' + query,
+                type: 'GET',
+                success: function(data) {
+                    $('#loadingIcon').hide();
+                    $('#searchResults').empty();
+                    if (data.length > 0) {
+                        $('#searchResults').append(`
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Size</th>
+                                        <th>Last Updated</th>
+                                        <th>Download Count</th>
+                                        <th>Vote Count</th>
+                                        <th>Usability Rating</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="searchResultsBody">
+                                </tbody>
+                            </table>
+                        `);
+                        $('#searchResults').css('display', 'block'); // Show the div when there are results
+                    }
+                    data.forEach(dataset => {
+                        var fields = dataset.split(/\s{2,}/); // Use a regular expression to split on two or more spaces
+                        var link = fields[0].replace('/', '.');
+                        var title = fields[1];
+                        var size = fields[2];
+                        var lastUpdated = fields[3].split(' ')[0]; // Split on the space character and take the first part
+                        var downloadCount = fields[4];
+                        var voteCount = fields[5];
+                        var usabilityRating = fields[6];
+                        var lol = fields[7];
+                        $('#searchResultsBody').append(`
+                            <tr>
+                                <td><a href="javascript:void(0);" onclick="loadDatasetPage('${link}');">${title}</a></td>
+                                <td>${size}</td>
+                                <td>${lastUpdated}</td>
+                                <td>${downloadCount}</td>
+                                <td>${voteCount}</td>
+                                <td>${usabilityRating}</td>
+                                <td>${lol}</td>
+                            </tr>
+                        `);
+                    });
+                }
+            });
+        }
+
+        function loadDatasetPage(link) {
+            // Show the loader
+            $('#loader').show();
+
+            // Load the dataset page
+            $.ajax({
+                url: '/Dataset/' + link,
+                type: 'GET',
+                success: function(data) {
+                    // Replace the main content with the dataset page content
+                    $('#main-content').html(data);
+
+                    // Hide the loader
+                    $('#loader').hide();
+                }
+            });
+        }
     </script>
-</body>
+</div></body>
+<div id="loader" class="loader"></div>
 </html>

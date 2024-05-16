@@ -5,6 +5,7 @@ using System.Linq;
 using System.Diagnostics;
 using System.Threading.Tasks; // Add this line
 using Microsoft.AspNetCore.Hosting; // Add this line
+using Microsoft.AspNetCore.Mvc;
 
 namespace YourNamespace.Pages
 {
@@ -90,7 +91,7 @@ namespace YourNamespace.Pages
                 pythonProcess2.WaitForExit();
             }
             ImagePath = "/correlation_matrix.png"; // Update the ImagePath to the correct path
-
+            new JsonResult(new { success = true }); // Change the return statement to return a JsonResult
         }
     }
 }
