@@ -3,9 +3,10 @@ using System.Net.Http;
 using System.IO;
 using System.Linq;
 using System.Diagnostics;
-using System.Threading.Tasks; // Add this line
-using Microsoft.AspNetCore.Hosting; // Add this line
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic.FileIO;
 
 namespace YourNamespace.Pages
 {
@@ -19,7 +20,8 @@ namespace YourNamespace.Pages
         }
         public string Link { get; set; }
         public int RowCount { get; set; }
-        public string ImagePath { get; set; } // Add this line
+        public string ImagePath { get; set; }
+        public double MissingValuesPercentage { get; set; }
         public async Task OnGetAsync(string link)
         {
             Link = link.Replace(".", "/");
@@ -65,6 +67,38 @@ namespace YourNamespace.Pages
 
             // Count the number of rows in the CSV file
             RowCount = System.IO.File.ReadLines(csvPath).Count();
+
+            // Calculate the number of columns in the CSV file
+            int ColumnCount = 0;
+            using (TextFieldParser parser = new TextFieldParser(csvPath))
+            {
+                parser.TextFieldType = FieldType.Delimited;
+                parser.SetDelimiters(",");
+                if (!parser.EndOfData)
+                {
+                    string[] fields = parser.ReadFields();
+                    ColumnCount = fields.Length;
+                }
+            }
+
+            // Calculate the number of missing values
+            int missingValues = 0;
+            using (TextFieldParser parser = new TextFieldParser(csvPath))
+            {
+                parser.TextFieldType = FieldType.Delimited;
+                parser.SetDelimiters(",");
+                while (!parser.EndOfData)
+                {
+                    string[] fields = parser.ReadFields();
+                    missingValues += fields.Count(field => string.IsNullOrEmpty(field));
+                }
+            }
+
+            // Calculate the total number of values
+            int totalValues = RowCount * ColumnCount;
+
+            // Calculate the percentage of missing values
+            MissingValuesPercentage = (double)missingValues / totalValues * 100;
 
             // Path to the Python interpreter
             string pythonPath = "/usr/bin/python3"; // Change this to the path of your Python interpreter

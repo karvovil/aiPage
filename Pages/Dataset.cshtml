@@ -9,8 +9,23 @@
 </head>
 <body>
     <h1>Dataset details</h1>
-    <p>This is the dataset page for @Model.Link.</p>
-    <p>The dataset has @Model.RowCount rows.</p>
-    <img src="@Model.ImagePath" alt="Correlation Matrix">
+    <div class="table-container"><table>
+        <tr>
+            <td>Dataset</td>
+            <td> <a href="https://www.kaggle.com/@Model.Link">@Model.Link</a>.</td>
+        </tr>
+        <tr>
+            <td>Row Count</td>
+            <td>@Model.RowCount rows.</td>
+        </tr>
+        <tr>
+            <td>Missing Values</td>
+            <td>@Model.MissingValuesPercentage.ToString("0.00")% </td>
+        </tr>
+    </table></div>
+    <figure>
+        <img src="@Model.ImagePath" alt="Correlation Matrix">
+        <figcaption>This image shows the correlation matrix for the dataset. Each cell in the matrix represents the correlation between two variables. A positive correlation is represented by a light color, and a negative correlation is represented by a dark color.</figcaption>
+    </figure>
 </body>
 </html>

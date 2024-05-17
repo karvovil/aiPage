@@ -6,6 +6,7 @@
     <title>Welcome to My Website</title>
     <link rel="stylesheet" type="text/css" href="/css/site.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body><div id="main-content">
     <div class="stars"></div>
@@ -17,7 +18,7 @@
     <p id="searchInstructions">Enter your search query above to find datasets. Press 'Enter' to search.</p>
     <div id="loadingIcon" class="loader"></div>
     <div id="searchResults"></div>
-
+    <div id="loader" class="loader"></div>
     <script>
         $(document).ready(function() {
             $('#searchButton').on('click', performSearch);
@@ -101,5 +102,5 @@
         }
     </script>
 </div></body>
-<div id="loader" class="loader"></div>
+
 </html>
